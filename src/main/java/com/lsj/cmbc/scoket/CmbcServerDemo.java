@@ -1,29 +1,24 @@
 package com.lsj.cmbc.scoket;
-/*
-TCP：面向连接，可靠的协议。
-客户端和服务端。
 
-客户端：Socket
-服务端：ServerSocket
-
-
-*/
 import java.io.*;
 import java.math.BigInteger;
 import java.net.*;
 import java.security.MessageDigest;
-import java.util.Date;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
+import org.junit.Test;
 
-
+/**
+ * 
+ * @author lishijie
+ * 模拟 民生实时联机代付  服务端
+ */
 
 public class  CmbcServerDemo{
 	public String messagekey = "12345678901234567890123456789012";
-	//@Test
+	@Test
 	public void test() {
 		try {
 			
