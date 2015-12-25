@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- Logback默认配置的采用的步骤 -->
+	<!-- 1. 尝试在 classpath 下查找文件 logback-test.xml； -->
+	<!-- 2. 如果文件不存在，则查找文件 logback.xml； -->
+	<!-- 3. 如果两个文件都不存在，logback 用 BasicConfigurator 自动对自己进行配置，这会导致记录输出到控制台。 -->
+
+	<!-- 本机环境中只会加载该配置文件，部署服务器时请删除本文件 -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<target>System.out</target>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern><![CDATA[ [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} %logger.%method:%line # %msg%n ]]></Pattern>
+		</encoder>
+	</appender>
+
+	<!-- 显示形成的sql -->
+	<!--
+		<logger name="org.hibernate.SQL" level="debug" />
+	-->
+	<!-- 显示传入的参数 -->
+	<!--
+		<logger name="org.hibernate.type" level="trace" />
+	-->
+
+	<!-- 显示形成的sql、使用的参数、结果集 -->
+	<!--
+		<logger name="java.sql" level="debug" />
+		<logger name="org.springframework.jdbc" level="debug" />
+		<logger name="com.ibatis" level="debug" />
+	-->
+	
+	<logger name="socket" level="debug" />
+
+	<root level="error">
+		<appender-ref ref="console" />
+	</root>
+</configuration>
