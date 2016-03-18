@@ -105,7 +105,7 @@ public class MessageHandler {
 							try {
 								byte[] bytes = pack();
 								if (bytes != null) {
-									sendQueue.put(bytes);
+									//sendQueue.put(bytes);
 								}
 								Thread.sleep(3 * 1000);
 							} catch (Exception e) {
