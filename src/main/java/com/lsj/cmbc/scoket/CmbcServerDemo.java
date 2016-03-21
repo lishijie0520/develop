@@ -180,9 +180,9 @@ public class  CmbcServerDemo{
 		
 		try {
 			StringBuffer buffer = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TRAN_RESP>");
-			buffer.append("<RESP_TYPE>").append("R").append("</RESP_TYPE>");
-			buffer.append("<RESP_CODE>").append("99").append("</RESP_CODE>");
-			buffer.append("<RESP_MSG>").append("渠道异常").append("</RESP_MSG>");
+			buffer.append("<RESP_TYPE>").append("S").append("</RESP_TYPE>");
+			buffer.append("<RESP_CODE>").append("00").append("</RESP_CODE>");
+			buffer.append("<RESP_MSG>").append("交易成功").append("</RESP_MSG>");
 			buffer.append("<COMPANY_ID>").append("CS").append("</COMPANY_ID>");
 			buffer.append("<MCHNT_CD></MCHNT_CD>");
 			buffer.append("<TRAN_DATE>").append("20151206").append("</TRAN_DATE>");
