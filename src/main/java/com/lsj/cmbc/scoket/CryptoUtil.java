@@ -1,3 +1,4 @@
+package com.lsj.cmbc.scoket;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -22,6 +23,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.codec.binary.Base64;
+
 
 public class CryptoUtil {
 	/**
@@ -303,17 +305,48 @@ public class CryptoUtil {
 
 	public static void main(String[] args) {
 		try {
-			final PublicKey yhPubKey = CryptoUtil.getRSAPublicKeyByFileSuffix("D:/bank_rsa_public_key_2048.pem", "RSA");
-			final PrivateKey hzfPriKey = CryptoUtil.getRSAPrivateKeyByFileSuffix("D:/bank_pkcs8_rsa_private_key_2048.pem", "RSA");
+			
+			/*String  path = CryptoUtil.class.getResource("/").getFile().toString();
+	        path = path.replace("test-classes", "classes")+"cmbc/";
+	        System.out.println(path);
+			final PublicKey yhPubKey = CryptoUtil.getRSAPublicKeyByFileSuffix(path+"bank_rsa_public_key_2048.pem", "RSA");
+			final PrivateKey hzfPriKey = CryptoUtil.getRSAPrivateKeyByFileSuffix(path+"bank_pkcs8_rsa_private_key_2048.pem", "RSA");
 
 			String plainXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>...";
 			byte[] signData = CryptoUtil.digitalSign(plainXML.getBytes("UTF-8"), hzfPriKey, "SHA1WithRSA");// 签名
 			byte[] encrtptData = CryptoUtil.RSAEncrypt(plainXML.getBytes("UTF-8"), yhPubKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 加密
-
+			System.out.println(new String(signData));
+			System.out.println(new String(encrtptData));
 			byte[] decryptData = CryptoUtil.RSADecrypt(encrtptData, hzfPriKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 解密
+			System.out.println(new String (decryptData));
 			boolean verifySign = CryptoUtil.verifyDigitalSign(decryptData, signData, yhPubKey, "SHA1WithRSA");// 验签
 
-			System.out.println(verifySign);
+			System.out.println(verifySign);*/
+			
+			
+	     	String  path = CryptoUtil.class.getResource("/").getFile().toString();
+	        path = path.replace("test-classes", "classes")+"uinpay/";
+	        System.out.println(path);
+	        
+			final PublicKey yhPubKey = CryptoUtil.getRSAPublicKeyByFileSuffix(path+"public_key.pem", "RSA");
+			final PrivateKey hzfPriKey = CryptoUtil.getRSAPrivateKeyByFileSuffix(path+"pkcs8_rsa_private_key.pem", "RSA");
+
+			String plainXML = "lishijie";
+//			byte[] signData = CryptoUtil.digitalSign(plainXML.getBytes("UTF-8"), hzfPriKey, "SHA1WithRSA");// 签名
+//			byte[] encrtptData = CryptoUtil.RSAEncrypt(plainXML.getBytes("UTF-8"), yhPubKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 加密
+//			System.err.println(new String(encrtptData));
+			
+			String ss = "AHn5OreVii2/dF1njSEKh+XO/lyrCDpNfQhbRv/y7yaYhapvSLLzoBx1DoMLSmreAbTNH7r37yVLg6yB0SHCrNKf1KhF+xAtHNzXV2ut8zbd7VXujMLaKZun8Fl1CkLuRvX6fXbmrVO92NFKj6LMwrlAIRduo3ZH09QXeMmQ5/F/Ud+Lirl4YHSrurvVgf6W/8jqTjSGfzmZhox0T2EJH1RwtG1bIgLFrQwSZV20Abe9l0O+jFH6VO4zXzIuO13fvb6RJc6n06Vkw0PKwxQTx9thvnPgR45uKEaskTlmLC29QP9QeWxu3HD9Jh5WQvUXnkzV1eJ8ir7plj226EH25A==";
+			byte[] decodeBase64 = Base64.decodeBase64(ss);
+			System.out.println(new String(decodeBase64));
+			byte[] decryptData = CryptoUtil.RSADecrypt(decodeBase64, hzfPriKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 解密
+			System.out.println("--------------------");
+			System.out.println(new String (decryptData));
+			//boolean verifySign = CryptoUtil.verifyDigitalSign(decryptData, signData, yhPubKey, "SHA1WithRSA");// 验签
+
+			//System.out.println(verifySign);
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
