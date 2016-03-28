@@ -135,4 +135,22 @@
             </plugin>
          </plugins>    
   </build>
+  <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>nexus-public-group</name>
+            <url>http://192.168.40.72:8081/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <name>nexus-public-group</name>
+            <url>http://192.168.40.72:8081/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

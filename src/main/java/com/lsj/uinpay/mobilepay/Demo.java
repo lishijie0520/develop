@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import org.junit.Test;
 
 import com.lsj.test.utils.HttpClientUtil;
@@ -48,5 +52,70 @@ public class Demo {
 	public void  query(){
 		
 		
+	}
+	@Test
+	public void test3des(){
+		String data = "ABCDEFG";
+		String key = "11223f588810303828257951cbdd556677297398303036e2";
+		System.out.println(encryptThreeDES(data.getBytes(), key));
+		
+	}
+	/**
+	 * 3DES加密
+	 * @param data 待加密数
+	 * @param keys 密钥 24字节长度
+	 * @return byte[] 加密数据
+	 */
+	public static String encryptThreeDES(byte[] data, String keys){
+		String result="";
+		try {
+			//System.out.println("data.length: " + data.length);
+			for (int i=0; i<data.length; i++) {
+				//System.out.print(data[i] + ",");
+			}
+			//System.out.println();
+			byte[] key=hexStringToByte(keys);
+			System.out.println(new String(key));
+			//System.out.println();
+			SecretKey secretKey = new SecretKeySpec(key, "DESede");
+			Cipher c1 = Cipher.getInstance("DESede");
+			c1.init(Cipher.ENCRYPT_MODE, secretKey);
+			byte[] res = c1.doFinal(data);
+			result = byte2hex(res);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("" + e);
+		}
+		return result;
+	}
+	public static byte[] hexStringToByte(String hex) {
+		hex=hex.toUpperCase();
+		int len = (hex.length() / 2);
+		byte[] result = new byte[len];
+		char[] achar = hex.toCharArray();
+		for (int i = 0; i < len; i++) {
+			int pos = i * 2;
+			result[i] = (byte) (toByte(achar[pos]) << 4 | toByte(achar[pos + 1]));
+		}
+		return result;
+	}
+	//转换成十六进制字符串
+    public static String byte2hex(byte[] b) {
+        String hs="";
+        String stmp="";
+
+        for (int n=0;n<b.length;n++) {
+            stmp=(java.lang.Integer.toHexString(b[n] & 0XFF));
+            if (stmp.length()==1) 
+            	hs=hs+"0"+stmp;
+            else 
+            	hs=hs+stmp;
+            //if (n<b.length-1)  hs=hs+":";
+        }
+        return hs.toUpperCase();
+    }
+    private static byte toByte(char c) {
+		byte b = (byte) "0123456789ABCDEF".indexOf(c);
+		return b;
 	}
 }
