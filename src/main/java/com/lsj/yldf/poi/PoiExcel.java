@@ -39,6 +39,9 @@ public class PoiExcel {
         cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框    
         cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框    
         cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框 
+    	HSSFDataFormat format = workbook.createDataFormat();
+    	cellStyle.setDataFormat(format.getFormat("@"));
+    	java.text.DecimalFormat   df   = new   java.text.DecimalFormat("#.00");  
         
         HSSFRow rowOne = sheet.createRow(1);
         rowOne.createCell(0).setCellStyle(cellStyle);
@@ -76,7 +79,7 @@ public class PoiExcel {
         rowFour.getCell(0).setCellValue("2015-11-09");
         rowFour.getCell(1).setCellValue("001");
         rowFour.getCell(2).setCellValue("5");
-        rowFour.getCell(3).setCellValue("186367.46");
+        rowFour.getCell(3).setCellValue(df.format(Double.valueOf("186367.46")));
         
         
 		HSSFCellStyle cellFiveStyle = workbook.createCellStyle();
@@ -94,49 +97,36 @@ public class PoiExcel {
 		}
 		String[] tableHeader = { "明细序号","收款人开户行名称","开户行联行号","收款人银行账号","户名","金额(单位:元)","企业流水号","备注"};
 		HSSFRow titleRow = sheet.createRow(6);
-		HSSFCellStyle titleCellStyle = workbook.createCellStyle();
-		titleCellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 下边框
-		titleCellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);// 左边框
-		titleCellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);// 上边框
-		titleCellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);// 右边框
-		titleCellStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		
 		for (int i = 0; i < tableHeader.length; i++) {
 			HSSFCell titleCell = titleRow.createCell(i);
-			titleCell.setCellStyle(titleCellStyle);
+			titleCell.setCellStyle(cellStyle);
 			titleCell.setCellValue(tableHeader[i]);
 		}
 		
-		HSSFCellStyle formatStringStyle = workbook.createCellStyle();
-		formatStringStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 下边框
-		formatStringStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);// 左边框
-		formatStringStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);// 上边框
-		formatStringStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);// 右边框
-		HSSFDataFormat format = workbook.createDataFormat();
-		formatStringStyle.setDataFormat(format.getFormat("@"));
 		
 		
-		java.text.DecimalFormat   df   = new   java.text.DecimalFormat("#.00");  
 		
 		HSSFRow rowSeven = sheet.createRow(7);
 		
-		rowSeven.createCell(0).setCellStyle(titleCellStyle);
-		rowSeven.createCell(1).setCellStyle(titleCellStyle);
-		rowSeven.createCell(2).setCellStyle(titleCellStyle);
-		rowSeven.createCell(3).setCellStyle(titleCellStyle);
-		rowSeven.createCell(4).setCellStyle(titleCellStyle);
-		rowSeven.createCell(5).setCellStyle(titleCellStyle);
-		rowSeven.createCell(6).setCellStyle(titleCellStyle);
-		rowSeven.createCell(7).setCellStyle(titleCellStyle);
+		rowSeven.createCell(0).setCellStyle(cellStyle);
+		rowSeven.createCell(1).setCellStyle(cellStyle);
+		rowSeven.createCell(2).setCellStyle(cellStyle);
+		rowSeven.createCell(3).setCellStyle(cellStyle);
+		rowSeven.createCell(4).setCellStyle(cellStyle);
+		rowSeven.createCell(5).setCellStyle(cellStyle);
+		rowSeven.createCell(6).setCellStyle(cellStyle);
+		rowSeven.createCell(7).setCellStyle(cellStyle);
 		
-		rowSeven.getCell(1).setCellStyle(formatStringStyle);
-		rowSeven.getCell(1).setCellType(HSSFCell.CELL_TYPE_STRING);
-		rowSeven.getCell(2).setCellStyle(formatStringStyle);
+		rowSeven.getCell(0).setCellStyle(cellStyle);
+		rowSeven.getCell(0).setCellType(HSSFCell.CELL_TYPE_STRING);
+		rowSeven.getCell(2).setCellStyle(cellStyle);
 		rowSeven.getCell(2).setCellType(HSSFCell.CELL_TYPE_STRING);
-		rowSeven.getCell(3).setCellStyle(formatStringStyle);
+		rowSeven.getCell(3).setCellStyle(cellStyle);
 		rowSeven.getCell(3).setCellType(HSSFCell.CELL_TYPE_STRING);
-		rowSeven.getCell(5).setCellStyle(formatStringStyle);
+		rowSeven.getCell(5).setCellStyle(cellStyle);
 		rowSeven.getCell(5).setCellType(HSSFCell.CELL_TYPE_STRING);
-		rowSeven.getCell(6).setCellStyle(formatStringStyle);
+		rowSeven.getCell(6).setCellStyle(cellStyle);
 		rowSeven.getCell(6).setCellType(HSSFCell.CELL_TYPE_STRING);
 		
 	
