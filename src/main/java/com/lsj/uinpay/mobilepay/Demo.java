@@ -1,5 +1,7 @@
 package com.lsj.uinpay.mobilepay;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -8,6 +10,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.poi.ddf.EscherColorRef.SysIndexSource;
 import org.junit.Test;
 
 import com.lsj.test.utils.HttpClientUtil;
@@ -51,13 +54,25 @@ public class Demo {
 	@Test
 	public void  query(){
 		
-		
+		try {
+
+			for (int i = 0; i < 5; i++) {
+				Thread.sleep(5000);
+				System.out.println("1111");
+			}
+		} catch (InterruptedException e) {
+
+			e.printStackTrace();
+		}
 	}
 	@Test
 	public void test3des(){
-		String data = "ABCDEFG";
+		//String data = "ABCDEFG";
 		String key = "11223f588810303828257951cbdd556677297398303036e2";
+		String data = "14522f0f4a3650519b1f6181d84355ae28a8dfc341bdeae0c856a628ad7bae2d4fe26bd4a4600018bba6b7f85ae7319a5cbeaf10c63392be48095e30755b727ed685ea509d6529664738ac5f399201e85db0b6fe99fd00a18edd6272c3e728b7caf8f6f94c4413a6d997bcf7aab37797f5bbffb3c6723c75ab14f9bb624aa09a7f981ede81bc5a1537de2dd2b3c071e74bb6870b6ff1bf669a276cc95ec4d86bf328df4e38360b709d4662611c248cf8d90731c1900340d5afdf6f03abd13dc6b2cf5df0c4e0bfa598cf07365b507392248ecad416cb1c3bc2a88413c70cd303baf113737cffd28d9e078a2bad713650342b2d32df9936bee1143696be8672f0a88d680654e9c9986df28175b75f96487101e98c7ab320d02abba5ea3bb4d36d49dd667f20ec2740d7685c4bf8b045900740832b35aa9b97e99b31ed7045776e5a92fb0458d7ba6ae75025ae95b2e8672b6aded9c4c17d5f2b6df3cdf9901ab12f6b3d77f3acaee7b4d3d966e027af45c2c7179862398361e97eb06af94beb94cb7b68613ec41d286d6645ea2ffe051be05bc27c221b2b7582444a6dea7efaec0162bf74c5d6a64dca5e4cec3a63764bee9210743c37e2cd26d8e4a5469f5d902726846e82e909b40e116d325ab795ad422d6b4eb926117d4cbda902780901fa526917c23a34b4f213834de1d5d18358d1759fb9eaa6b6f7b5bfe899cd0bc785febcba76f2b56b9e9ea879715eddbb5f5cbeaf10c63392be6c970e6a089f2b77";
 		System.out.println(encryptThreeDES(data.getBytes(), key));
+		
+		
 		
 	}
 	/**
@@ -118,4 +133,13 @@ public class Demo {
 		byte b = (byte) "0123456789ABCDEF".indexOf(c);
 		return b;
 	}
+    @Test
+    public void test1(){
+    	long amount = 100;
+    	BigDecimal bigDecimal = new BigDecimal(amount);
+    	BigDecimal divide = bigDecimal.divide(new BigDecimal(100));
+    	
+    	 DecimalFormat df=new DecimalFormat("0.00");
+    	System.out.println(df.format(divide).toString());
+    }
 }

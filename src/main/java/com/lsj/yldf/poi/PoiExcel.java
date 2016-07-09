@@ -32,7 +32,7 @@ public class PoiExcel {
         sheet.addMergedRegion(new CellRangeAddress(5, 5, 0, 7));
         sheet.setDefaultColumnWidth(20);
         HSSFRow rowZero = sheet.createRow(0);
-        rowZero.createCell(0).setCellValue("代付模板");;
+        rowZero.createCell(0).setCellValue("代付模板");
        
         HSSFCellStyle cellStyle = workbook.createCellStyle();  
         cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框    

@@ -168,7 +168,7 @@ public class MessageHandler {
 			charset = "UTF-8";
 			configParams.put("CHARSET", charset);
 		}
-		int headLength = NumberUtils.toInt((String) configParams.get("HEAD_LENGTH"), 6);// 报文头长度
+		int headLength = NumberUtils.toInt((String) configParams.get("HEAD_LENGTH"), 8);// 报文头长度
 		configParams.put("HEAD_LENGTH", String.valueOf(headLength));
 		int messageCodeLength = NumberUtils.toInt((String) configParams.get("MESSAGE_CODE_LENGTH"), 15);// 报文码长度
 		configParams.put("MESSAGE_CODE_LENGTH", String.valueOf(messageCodeLength));
@@ -187,6 +187,12 @@ public class MessageHandler {
 			messagekey = "12345678901234567890123456789012";
 			configParams.put("MESSAGE_KEY", messagekey);
 		}
+		//XXX 添加合作方ID
+		String companyId = StringUtils.trimToNull((String) configParams.get("COMPANY_ID"));// 合作方ID
+		if (companyId == null) {
+			companyId = "DF_HSM";
+			configParams.put("COMPANY_ID", companyId);
+		}
 	}
 
 	/**
@@ -198,13 +204,18 @@ public class MessageHandler {
 		byte[] bytes = null;
 		try {
 			String charset = StringUtils.trimToNull((String) configParams.get("CHARSET"));// 字符集
-			int headLength = NumberUtils.toInt((String) configParams.get("HEAD_LENGTH"), 6);// 报文头长度
+			//XXX edit 6 -->8
+			int headLength = NumberUtils.toInt((String) configParams.get("HEAD_LENGTH"), 8);// 报文头长度
+			//XXX edit 15-->8
 			int messageCodeLength = NumberUtils.toInt((String) configParams.get("MESSAGE_CODE_LENGTH"), 15);// 报文码长度
 			String tranMessageCode = StringUtils.trimToNull((String) configParams.get("MESSAGE_CODE_TRAN"));// 报文码:代付交易
 			String messagekey = StringUtils.trimToNull((String) configParams.get("MESSAGE_KEY"));// 报文密钥
+			//XXX add 合作方ID
+			String companyId = StringUtils.trimToNull((String) configParams.get("COMPANY_ID"));// 合作方ID
 
 			StringBuffer buffer = new StringBuffer("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TRAN_REQ>");
-			buffer.append("<COMPANY_ID>").append("CS").append("</COMPANY_ID>");
+			//XXX  delete 去掉
+			//buffer.append("<COMPANY_ID>").append("CS").append("</COMPANY_ID>");
 			buffer.append("<MCHNT_CD>").append("").append("</MCHNT_CD>");
 			buffer.append("<TRAN_DATE>").append(DateFormatUtils.format(new Date(), "yyyyMMdd")).append("</TRAN_DATE>");
 			buffer.append("<TRAN_TIME>").append(DateFormatUtils.format(new Date(), "HHmmss")).append("</TRAN_TIME>");
@@ -221,16 +232,27 @@ public class MessageHandler {
 
 			byte[] bodyBytes = buffer.toString().getBytes(charset);
 			String mac = md5(buffer.append(messagekey).toString().getBytes(charset));
-			bytes = ArrayUtils.addAll(bytes, StringUtils.leftPad(String.valueOf(bodyBytes.length), headLength, "0").getBytes(charset));
-			bytes = ArrayUtils.addAll(bytes, StringUtils.rightPad(tranMessageCode, messageCodeLength, " ").getBytes(charset));
-			bytes = ArrayUtils.addAll(bytes, bodyBytes);
-			bytes = ArrayUtils.addAll(bytes, mac.getBytes(charset));
+			bytes = ArrayUtils.addAll(bytes, StringUtils.leftPad(String.valueOf(bodyBytes.length), headLength, "0").getBytes(charset));//1¬报文总长度
+
+			bytes = ArrayUtils.addAll(bytes, StringUtils.leftPad(companyId, 15, " ").getBytes(charset));//域2：合作方编码
+			bytes = ArrayUtils.addAll(bytes, StringUtils.leftPad(tranMessageCode, messageCodeLength, " ").getBytes(charset));//域3：交易服务码
+
+			
+			bytes = ArrayUtils.addAll(bytes, StringUtils.leftPad(String.valueOf(bodyBytes.length), 4, "0").getBytes(charset));//域4：签名域长度
+
+			//bytes = ArrayUtils.addAll(bytes, StringUtils.leftPad(String.valueOf(bodyBytes.length), 4, "0").getBytes(charset));//域5：签名域值
+			//域6：XML报文主体密文
+			//byte[] digitalSign = CryptoUtil.digitalSign(buffer.toString());
+			//bytes = ArrayUtils.addAll(bytes, digitalSign);
+			//bytes = ArrayUtils.addAll(bytes, mac.getBytes(charset));
+			System.out.println(new String(bytes));
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 		}
 		return bytes;
 	}
 
+	
 	/**
 	 * 解包
 	 * 

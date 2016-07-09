@@ -173,6 +173,8 @@ public class SocketAsyncLongOutputAdapter {
 	private void refresh() {
 		// TODO
 		// 读取参数功能自行实现
+		
+		
 		String canRunStr = (String) configParams.get("CAN_RUN");// 是否允许运行标识
 		if ("false".equalsIgnoreCase(canRunStr)) {
 			canRun = false;
@@ -456,4 +458,3 @@ public class SocketAsyncLongOutputAdapter {
 		}
 	}
 }
-

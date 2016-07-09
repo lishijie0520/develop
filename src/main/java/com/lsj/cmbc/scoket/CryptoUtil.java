@@ -1,4 +1,5 @@
 package com.lsj.cmbc.scoket;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -23,9 +24,103 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.codec.binary.Base64;
-
+import org.apache.commons.lang.StringUtils;
 
 public class CryptoUtil {
+
+	/**
+	 * 获取公钥对象
+	 * 
+	 * @param InputStream
+	 *            公钥输入流
+	 * @param keyAlgorithm
+	 *            密钥算法
+	 * @return 公钥对象
+	 * @throws Exception
+	 */
+	public static PublicKey getPublicKey(InputStream inputStream, String keyAlgorithm) throws Exception {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+			StringBuilder sb = new StringBuilder();
+			String readLine = null;
+			while ((readLine = br.readLine()) != null) {
+				if (readLine.charAt(0) == '-') {
+					continue;
+				} else {
+					sb.append(readLine);
+					sb.append('\r');
+				}
+			}
+			X509EncodedKeySpec pubX509 = new X509EncodedKeySpec(Base64.decodeBase64(sb.toString()));
+			KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm);
+			PublicKey publicKey = keyFactory.generatePublic(pubX509);
+
+			return publicKey;
+		} catch (FileNotFoundException e) {
+			throw new Exception("公钥路径文件不存在");
+		} catch (IOException e) {
+			throw new Exception("读取公钥异常");
+		} catch (NoSuchAlgorithmException e) {
+			throw new Exception(String.format("生成密钥工厂时没有[%s]此类算法", keyAlgorithm));
+		} catch (InvalidKeySpecException e) {
+			throw new Exception("生成公钥对象异常");
+		} finally {
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (IOException e) {
+			}
+		}
+	}
+
+	/**
+	 * 获取私钥对象
+	 * 
+	 * @param inputStream
+	 *            私钥输入流
+	 * @param keyAlgorithm
+	 *            密钥算法
+	 * @return 私钥对象
+	 * @throws Exception
+	 */
+	@SuppressWarnings("deprecation")
+	public static PrivateKey getPrivateKey(InputStream inputStream, String keyAlgorithm) throws Exception {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+			StringBuilder sb = new StringBuilder();
+			String readLine = null;
+			while ((readLine = br.readLine()) != null) {
+				if (readLine.charAt(0) == '-') {
+					continue;
+				} else {
+					sb.append(readLine);
+					sb.append('\r');
+				}
+			}
+			PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decodeBase64(sb.toString()));
+			KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm);
+			PrivateKey privateKey = keyFactory.generatePrivate(priPKCS8);
+
+			return privateKey;
+		} catch (FileNotFoundException e) {
+			throw new Exception("私钥路径文件不存在");
+		} catch (IOException e) {
+			throw new Exception("读取私钥异常");
+		} catch (NoSuchAlgorithmException e) {
+			throw new Exception("生成私钥对象异常");
+		} catch (InvalidKeySpecException e) {
+			throw new Exception("生成私钥对象异常");
+		} finally {
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			} catch (IOException e) {
+			}
+		}
+	}
+
 	/**
 	 * 数字签名函数入口
 	 * 
@@ -87,104 +182,7 @@ public class CryptoUtil {
 	}
 
 	/**
-	 * 获取RSA公钥对象
-	 * 
-	 * @param filePath
-	 *            RSA公钥路径
-	 * @param keyAlgorithm
-	 *            密钥算法
-	 * @return RSA公钥对象
-	 * @throws Exception
-	 */
-	public static PublicKey getRSAPublicKeyByFileSuffix(String filePath, String keyAlgorithm) throws Exception {
-		InputStream in = null;
-		try {
-			in = new FileInputStream(filePath);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			StringBuilder sb = new StringBuilder();
-			String readLine = null;
-			while ((readLine = br.readLine()) != null) {
-				if (readLine.charAt(0) == '-') {
-					continue;
-				} else {
-					sb.append(readLine);
-					sb.append('\r');
-				}
-			}
-			X509EncodedKeySpec pubX509 = new X509EncodedKeySpec(Base64.decodeBase64(sb.toString()));
-			KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm);
-			PublicKey pubKey = keyFactory.generatePublic(pubX509);
-
-			return pubKey;
-		} catch (FileNotFoundException e) {
-			throw new Exception("公钥路径文件不存在");
-		} catch (IOException e) {
-			throw new Exception("读取公钥异常");
-		} catch (NoSuchAlgorithmException e) {
-			throw new Exception(String.format("生成密钥工厂时没有[%s]此类算法", keyAlgorithm));
-		} catch (InvalidKeySpecException e) {
-			throw new Exception("生成公钥对象异常");
-		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-			} catch (IOException e) {
-			}
-		}
-	}
-
-	/**
-	 * 获取RSA私钥对象
-	 * 
-	 * @param filePath
-	 *            RSA私钥路径
-	 * @param keyAlgorithm
-	 *            密钥算法
-	 * @return RSA私钥对象
-	 * @throws Exception
-	 */
-	@SuppressWarnings("deprecation")
-	public static PrivateKey getRSAPrivateKeyByFileSuffix(String filePath, String keyAlgorithm) throws Exception {
-		InputStream in = null;
-		try {
-			in = new FileInputStream(filePath);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			StringBuilder sb = new StringBuilder();
-			String readLine = null;
-			while ((readLine = br.readLine()) != null) {
-				if (readLine.charAt(0) == '-') {
-					continue;
-				} else {
-					sb.append(readLine);
-					sb.append('\r');
-				}
-			}
-			PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decodeBase64(sb.toString()));
-			KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm);
-			PrivateKey priKey = keyFactory.generatePrivate(priPKCS8);
-
-			return priKey;
-		} catch (FileNotFoundException e) {
-			throw new Exception("私钥路径文件不存在");
-		} catch (IOException e) {
-			throw new Exception("读取私钥异常");
-		} catch (NoSuchAlgorithmException e) {
-			throw new Exception("生成私钥对象异常");
-		} catch (InvalidKeySpecException e) {
-			throw new Exception("生成私钥对象异常");
-		} finally {
-			try {
-				if (in != null) {
-					in.close();
-				}
-			} catch (IOException e) {
-			}
-		}
-	}
-
-	/**
-	 * RSA加密
+	 * 加密
 	 * 
 	 * @param plainBytes
 	 *            明文字节数组
@@ -199,7 +197,7 @@ public class CryptoUtil {
 	 * @return 加密后字节数组，不经base64编码
 	 * @throws Exception
 	 */
-	public static byte[] RSAEncrypt(byte[] plainBytes, PublicKey publicKey, int keyLength, int reserveSize, String cipherAlgorithm) throws Exception {
+	public static byte[] encrypt(byte[] plainBytes, PublicKey publicKey, int keyLength, int reserveSize, String cipherAlgorithm) throws Exception {
 		int keyByteSize = keyLength / 8; // 密钥字节数
 		int encryptBlockSize = keyByteSize - reserveSize; // 加密块大小=密钥字节数-padding填充字节数
 		int nBlock = plainBytes.length / encryptBlockSize;// 计算分段加密的block数，向上取整
@@ -260,7 +258,7 @@ public class CryptoUtil {
 	 * @return 解密后字节数组，不经base64编码
 	 * @throws Exception
 	 */
-	public static byte[] RSADecrypt(byte[] encryptedBytes, PrivateKey privateKey, int keyLength, int reserveSize, String cipherAlgorithm) throws Exception {
+	public static byte[] decrypt(byte[] encryptedBytes, PrivateKey privateKey, int keyLength, int reserveSize, String cipherAlgorithm) throws Exception {
 		int keyByteSize = keyLength / 8; // 密钥字节数
 		int decryptBlockSize = keyByteSize - reserveSize; // 解密块大小=密钥字节数-padding填充字节数
 		int nBlock = encryptedBytes.length / keyByteSize;// 计算分段解密的block数，理论上能整除
@@ -303,50 +301,43 @@ public class CryptoUtil {
 		}
 	}
 
+	/**
+	 * 字符数组转16进制字符串
+	 * 
+	 * @param bytes
+	 * @return
+	 */
+	public static String bytes2string(byte[] bytes, int radix) {
+		// 2个16进制字符占用1个字节，8个二进制字符占用1个字节
+		int size = 2;
+		if (radix == 2) {
+			size = 8;
+		}
+		StringBuilder sb = new StringBuilder(bytes.length * size);
+		for (int i = 0; i < bytes.length; i++) {
+			int integer = bytes[i];
+			while (integer < 0) {
+				integer = integer + 256;
+			}
+			String str = Integer.toString(integer, radix);
+			sb.append(StringUtils.leftPad(str.toUpperCase(), size, "0"));
+		}
+		return sb.toString();
+	}
+
 	public static void main(String[] args) {
 		try {
-			
-			/*String  path = CryptoUtil.class.getResource("/").getFile().toString();
-	        path = path.replace("test-classes", "classes")+"cmbc/";
-	        System.out.println(path);
-			final PublicKey yhPubKey = CryptoUtil.getRSAPublicKeyByFileSuffix(path+"bank_rsa_public_key_2048.pem", "RSA");
-			final PrivateKey hzfPriKey = CryptoUtil.getRSAPrivateKeyByFileSuffix(path+"bank_pkcs8_rsa_private_key_2048.pem", "RSA");
+			PublicKey publicKey = CryptoUtil.getPublicKey(new FileInputStream("D:/bank_rsa_public_key_2048.pem"), "RSA");
+			PrivateKey privateKey = CryptoUtil.getPrivateKey(new FileInputStream("D:/bank_pkcs8_rsa_private_key_2048.pem"), "RSA");
 
 			String plainXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>...";
-			byte[] signData = CryptoUtil.digitalSign(plainXML.getBytes("UTF-8"), hzfPriKey, "SHA1WithRSA");// 签名
-			byte[] encrtptData = CryptoUtil.RSAEncrypt(plainXML.getBytes("UTF-8"), yhPubKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 加密
-			System.out.println(new String(signData));
-			System.out.println(new String(encrtptData));
-			byte[] decryptData = CryptoUtil.RSADecrypt(encrtptData, hzfPriKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 解密
-			System.out.println(new String (decryptData));
-			boolean verifySign = CryptoUtil.verifyDigitalSign(decryptData, signData, yhPubKey, "SHA1WithRSA");// 验签
+			byte[] signData = CryptoUtil.digitalSign(plainXML.getBytes("UTF-8"), privateKey, "SHA1WithRSA");// 签名
+			byte[] encryptedData = CryptoUtil.encrypt(plainXML.getBytes("UTF-8"), publicKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 加密
 
-			System.out.println(verifySign);*/
-			
-			
-	     	String  path = CryptoUtil.class.getResource("/").getFile().toString();
-	        path = path.replace("test-classes", "classes")+"uinpay/";
-	        System.out.println(path);
-	        
-			final PublicKey yhPubKey = CryptoUtil.getRSAPublicKeyByFileSuffix(path+"public_key.pem", "RSA");
-			final PrivateKey hzfPriKey = CryptoUtil.getRSAPrivateKeyByFileSuffix(path+"pkcs8_rsa_private_key.pem", "RSA");
+			byte[] decryptedData = CryptoUtil.decrypt(encryptedData, privateKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 解密
+			boolean verifySign = CryptoUtil.verifyDigitalSign(decryptedData, signData, publicKey, "SHA1WithRSA");// 验签
 
-			String plainXML = "lishijie";
-//			byte[] signData = CryptoUtil.digitalSign(plainXML.getBytes("UTF-8"), hzfPriKey, "SHA1WithRSA");// 签名
-//			byte[] encrtptData = CryptoUtil.RSAEncrypt(plainXML.getBytes("UTF-8"), yhPubKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 加密
-//			System.err.println(new String(encrtptData));
-			
-			String ss = "AHn5OreVii2/dF1njSEKh+XO/lyrCDpNfQhbRv/y7yaYhapvSLLzoBx1DoMLSmreAbTNH7r37yVLg6yB0SHCrNKf1KhF+xAtHNzXV2ut8zbd7VXujMLaKZun8Fl1CkLuRvX6fXbmrVO92NFKj6LMwrlAIRduo3ZH09QXeMmQ5/F/Ud+Lirl4YHSrurvVgf6W/8jqTjSGfzmZhox0T2EJH1RwtG1bIgLFrQwSZV20Abe9l0O+jFH6VO4zXzIuO13fvb6RJc6n06Vkw0PKwxQTx9thvnPgR45uKEaskTlmLC29QP9QeWxu3HD9Jh5WQvUXnkzV1eJ8ir7plj226EH25A==";
-			byte[] decodeBase64 = Base64.decodeBase64(ss);
-			System.out.println(new String(decodeBase64));
-			byte[] decryptData = CryptoUtil.RSADecrypt(decodeBase64, hzfPriKey, 2048, 11, "RSA/ECB/PKCS1Padding");// 解密
-			System.out.println("--------------------");
-			System.out.println(new String (decryptData));
-			//boolean verifySign = CryptoUtil.verifyDigitalSign(decryptData, signData, yhPubKey, "SHA1WithRSA");// 验签
-
-			//System.out.println(verifySign);
-			
-			
+			System.out.println(verifySign);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -305,16 +305,30 @@ public class RSAUtils {
 		return null;
 	}
 	@Test
-	public  void test() {
+	public  void test() throws UnsupportedEncodingException {
 		 String rsa3des = "AHn5OreVii2/dF1njSEKh+XO/lyrCDpNfQhbRv/y7yaYhapvSLLzoBx1DoMLSmreAbTNH7r37yVLg6yB0SHCrNKf1KhF+xAtHNzXV2ut8zbd7VXujMLaKZun8Fl1CkLuRvX6fXbmrVO92NFKj6LMwrlAIRduo3ZH09QXeMmQ5/F/Ud+Lirl4YHSrurvVgf6W/8jqTjSGfzmZhox0T2EJH1RwtG1bIgLFrQwSZV20Abe9l0O+jFH6VO4zXzIuO13fvb6RJc6n06Vkw0PKwxQTx9thvnPgR45uKEaskTlmLC29QP9QeWxu3HD9Jh5WQvUXnkzV1eJ8ir7plj226EH25A==";
 	  	 String  path = RSAUtils.class.getResource("/").getFile().toString();
          path = path.replace("test-classes", "classes")+"uinpay/";
-         initKey(path+"pkcs8_rsa_private_key.pem",path+"public_key.pem");
+         initKey(path+"pkcs8_rsa_private_key.pem",path+"uinpay_abc_public_key_2048.pem");
          // initPrivateKey(path+"pkcs8_rsa_private_key.pem");
-         String decrypt = decrypt(rsa3des.toString());
-         System.out.println(decrypt);
+        // String decrypt = decrypt(rsa3des.toString());
+         
+        // String ss  = "lishijie";
+        // String encrypt = encrypt(ss.getBytes());
+        // System.out.println("："+encrypt);
+         
+         
+         //String decrypt = decrypt(encrypt.toString());
+         //System.out.println("解密："+decrypt);
 		
+	
 		
+		String as ="amount=11000bankcardtype=2bindid=B1459242122269cardno=6222111122223333999companyid=16000251errorcode=errormsg=orderid=1459242536358status=0000uyorderid=UY1459242122269";
+		String sign = sign(as);
+		System.out.println(sign);
+		String aa = "Kg5Li93WyyuOaoRnDBRnO3pNUvnbxIrWdK5Hoa9v2Ad5FfZ03Rqb3yqBK9O7FcPkyHxEBNONvf95Ir3aJNaqz58cE/06t/wKqW/nsT733sCTpOtkw9l3TLxkYT/5bD2DZ8ioBbd6Iyd3vjC/8ypsUmoiNgM/qLDrgxdqiDv08vW3FEzvra0CXsd2io/46CT9NzC96Yoz/z/aAS8F3gi/t3ku6p0RaKQQ0dog/qJpK17/bItsV4SNkmgy9m83jHjHpNXt5yVNkU12rHECVaE2FRzOZ+OBPFf05xycdyH4fSsie7o5EbU9WStlRydHqCSchuEflyntECigNW6s9hh3cg==";
+		boolean verify = verify(as, aa);
+		System.out.println(verify);
 		
 	}
 } 
